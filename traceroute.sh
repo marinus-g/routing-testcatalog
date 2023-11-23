@@ -20,7 +20,8 @@ expected_addresses=("${target_addresses[@]}")
 current_hop=1
 for expected_address in "${expected_addresses[@]}"; do
     # Finde die nächste Hop-Adresse in der Traceroute-Ausgabe
-    hop_address=$(echo "$traceroute_result" | awk -v hop_number=$current_hop '$0 ~ hop_number {if(NR>1)print $2}')
+    #hop_address=$(echo "$traceroute_result" | awk -v hop_number=$current_hop '$0 ~ hop_number {if(NR>1)print $2}')
+    hop_address=$(echo "$traceroute_result" | awk -v hop_number=$current_hop '$0 ~ hop_number {for(i=2;i<=NF;i++){if($i ~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/){print $i; exit}}}')
 
     # Überprüfe, ob die aktuelle Hop-Adresse mit der erwarteten Adresse übereinstimmt
     if [ -z "$hop_address" ] || [ "$hop_address" != "$expected_address" ]; then
